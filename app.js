@@ -14,6 +14,7 @@ var tableData = $("#data-table");
 var dataMessage = $("#data-message");
 var backButton = $("#back-button");
 var createForm = $("#form-container");
+var dataStatus = $("#data-status");
 $(document).on("api:system:ready", function () {
     myApp.getSession = function(){
         errorDiv.html("");
@@ -105,7 +106,8 @@ $(document).on("api:system:ready", function () {
             //console.log(row.childNodes[i].className + "," +  row.childNodes[i].textContent);
         }
         dreamfactory.db.updateRecord(request).then(function(response){
-            console.log("updated record " + response.id);
+            //console.log("updated record " + response.id);
+            dataStatus.toggleClass("alert-success").html("Record Updated").delay(2000).fadeOut( "slow");
         });
 //      row.childNodes.forEach(function(cell){
 //          console.log(cell.innerHTML);
@@ -117,36 +119,40 @@ $(document).on("api:system:ready", function () {
         dataMessage.html("Viewing Data for " + table_name + " table");
         //GIVE me the data, and the schema behind it in a meta field
         dreamfactory.db.getRecords({table_name:table_name, include_schema:true}).then(function(response){
-            var tables = "";
-            var data = response.record;
-            if(!data[0]){
-                dataMessage.html("No records for " + table_name + " table");
-                backButton.show();
-                return;
-            }
+                var tables = "";
+                var data = response.record;
+                if(!data[0]){
+                    dataMessage.html("No records for " + table_name + " table");
+                    backButton.show();
+                    return;
+                }
 
-            var columns = Object.keys(data[0]);
-            //console.log(columns);
-            tables = "<tr>";
-            columns.forEach(function(column){
-                //console.log(column);
-                tables += "<th>" + column +"</th>";
-            });
-            tables +="<th></th></tr>";
-            data.forEach(function(record){
-                tables += "<tr id='" + record.id +"'>";
+                var columns = Object.keys(data[0]);
+                //console.log(columns);
+                tables = "<tr>";
                 columns.forEach(function(column){
-                    tables += "<td class='"+ column + "' contenteditable='true'>" + record[column] + "</td>";
+                    //console.log(column);
+                    tables += "<th>" + column +"</th>";
                 });
-                tables +="<td style='width:155px;'><button onclick=myApp.saveData(event,'" + table_name + "') class='btn'><span class='glyphicon glyphicon-floppy-disk'></span></button><button onclick=myApp.deleteData(event,'" + table_name + "') class='btn'><span class='glyphicon glyphicon-remove'></span></button></td>";
-                tables += "</tr>";
-            });
-            tableData.html(tables);
-            tableContainer.show();
-            backButton.show();
-            myApp.createForm(response.meta.schema);
+                tables +="<th></th></tr>";
+                data.forEach(function(record){
+                    tables += "<tr id='" + record.id +"'>";
+                    columns.forEach(function(column){
+                        tables += "<td class='"+ column + "' contenteditable='true'>" + record[column] + "</td>";
+                    });
+                    tables +="<td style='width:155px;'><button onclick=myApp.saveData(event,'" + table_name + "') class='btn'><span class='glyphicon glyphicon-floppy-disk'></span></button><button onclick=myApp.deleteData(event,'" + table_name + "') class='btn'><span class='glyphicon glyphicon-remove'></span></button></td>";
+                    tables += "</tr>";
+                });
+                tableData.html(tables);
+                tableContainer.show();
+                backButton.show();
+                myApp.createForm(response.meta.schema);
 
-        });
+            },
+            function(error){
+                dataStatus.toggleClass("alert-danger").html(dreamfactory.processErrors(error)).delay(2000).fadeOut( "slow");
+            }
+        );
         myApp.createForm = function(schema){
             var form = "<h5>Create Record for " + schema.label + "</h5><br/><div>";
             var fields = schema.field.filter(function(element){
@@ -166,7 +172,11 @@ $(document).on("api:system:ready", function () {
             });
             dreamfactory.db.createRecords({"table_name":table_name, record: record , fields: "*"})
                 .then(function(response){
-                    myApp.showData(table_name);
+                    var record = response.record[0].id;
+                    //console.log(record);
+                    //$("#" + record).css("background-color:red");
+                    myApp.showData(table_name, record);
+                    dataStatus.toggleClass("alert-success").html("Record Added").delay(2000).fadeOut( "slow");
                 });
         };
 
