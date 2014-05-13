@@ -135,7 +135,7 @@ $(document).on("api:system:ready", function () {
                 columns.forEach(function(column){
                     tables += "<td class='"+ column + "' contenteditable='true'>" + record[column] + "</td>";
                 });
-                tables +="<td><button onclick=myApp.saveData(event,'" + table_name + "') class='btn btn-primary'>Save</button><button onclick=myApp.deleteData(event,'" + table_name + "') class='btn btn-danger'>Delete</button></td>";
+                tables +="<td style='width:155px;'><button onclick=myApp.saveData(event,'" + table_name + "') class='btn'><span class='glyphicon glyphicon-floppy-disk'></span></button><button onclick=myApp.deleteData(event,'" + table_name + "') class='btn'><span class='glyphicon glyphicon-remove'></span></button></td>";
                 tables += "</tr>";
             });
             tableData.html(tables);
@@ -148,7 +148,7 @@ $(document).on("api:system:ready", function () {
 
 
 
-    }
+    };
     progressBar.hide();
     myApp.getConfig();
 });
