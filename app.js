@@ -13,6 +13,7 @@ var tableContainer = $("#data-container");
 var tableData = $("#data-table");
 var dataMessage = $("#data-message");
 var backButton = $("#back-button");
+var createForm = $("#form-container");
 $(document).on("api:system:ready", function () {
     myApp.getSession = function(){
         errorDiv.html("");
@@ -83,6 +84,7 @@ $(document).on("api:system:ready", function () {
             });
             tableData.html(tables);
             tableContainer.show();
+            createForm.hide();
         }, function(error){
             errorDiv.html(dreamfactory.processErrors(error));
         });
@@ -113,7 +115,8 @@ $(document).on("api:system:ready", function () {
         tableData.empty();
         //console.log(event.target.innerHTML);
         dataMessage.html("Viewing Data for " + table_name + " table");
-        dreamfactory.db.getRecords({table_name:table_name}).then(function(response){
+        //GIVE me the data, and the schema behind it in a meta field
+        dreamfactory.db.getRecords({table_name:table_name, include_schema:true}).then(function(response){
             var tables = "";
             var data = response.record;
             if(!data[0]){
@@ -141,10 +144,31 @@ $(document).on("api:system:ready", function () {
             tableData.html(tables);
             tableContainer.show();
             backButton.show();
+            myApp.createForm(response.meta.schema);
 
         });
-
-
+        myApp.createForm = function(schema){
+            var form = "<h5>Create Record for " + schema.label + "</h5><br/><div>";
+            var fields = schema.field.filter(function(element){
+                return element.type !== "id";
+            });
+            fields.forEach(function(field){
+                form += "<input class='form-item' type='text' placeholder='" + field.name +"' id='" + field.name + "'/></br>";
+            });
+            form += "<br/><button onclick=myApp.insertData('" + schema.label + "') class='btn btn-primary'>Insert Record</button></div>";
+            createForm.html(form).show();
+        };
+        myApp.insertData = function(table_name){
+            var formItems = $(".form-item");
+            var record = {};
+            formItems.each(function(){
+                record[$( this).attr("id")] = $( this ).val();
+            });
+            dreamfactory.db.createRecords({"table_name":table_name, record: record , fields: "*"})
+                .then(function(response){
+                    myApp.showData(table_name);
+                });
+        };
 
 
 

@@ -144,3 +144,6 @@ html,body{
     display:none;
     cursor:pointer;
 }
+#form-container{
+    display:none;
+}
