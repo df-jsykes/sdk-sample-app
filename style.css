@@ -4,7 +4,7 @@ html,body{
 }
 body{
     margin:10px;
-    padding-top:50px;
+    padding-top:65px;
 }
 
 #login-form{
@@ -30,6 +30,5 @@ body{
     padding:5px;
 }
 #error-div{
-    padding:5px;
     display:none;
 }
