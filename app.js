@@ -15,18 +15,21 @@ var dataMessage = $("#data-message");
 var backButton = $("#back-button");
 var createForm = $("#form-container");
 var dataStatus = $("#data-status");
+var currentUser = $("#current-user");
 $(document).on("api:system:ready", function () {
     myApp.getSession = function(){
         errorDiv.html("");
         loadingMessage.html("Checking for current session");
         progressBar.show();
-        dreamfactory.user.getSession().then(function () {
+        dreamfactory.user.getSession().then(function (response) {
             myApp.listLocalDatabases();
             progressBar.hide();
+            var user = response.display_name || response.first_name + " " + response.last_name;
+            currentUser.html("Signed in as <b>" + user + "</b>");
         }, function (error) {
             $("#login-form").show();
             progressBar.hide();
-            errorDiv.html(dreamfactory.processErrors(error));;
+            errorDiv.html(dreamfactory.processErrors(error)).show().delay(2000).fadeOut( "slow");
         });
     };
     myApp.getConfig = function(){
@@ -40,7 +43,7 @@ $(document).on("api:system:ready", function () {
             //}
         }, function(error){
             progressBar.hide();
-            errorDiv.html(dreamfactory.processErrors(error));;
+            errorDiv.html(dreamfactory.processErrors(error)).show().delay(2000).fadeOut( "slow");
         });
     }
     myApp.login = function () {
@@ -57,10 +60,12 @@ $(document).on("api:system:ready", function () {
                 progressBar.hide();
                 //dreamfactory.db.getRecords({table_name: "todo"});
                 myApp.listLocalDatabases();
+                var user = response.display_name || response.first_name + " " + response.last_name;
+                currentUser.html("Signed in as <b>" + user + "</b>");
             }, function (error) {
                 //console.log(error);
                 progressBar.hide();
-                errorDiv.html(dreamfactory.processErrors(error));
+                errorDiv.html(dreamfactory.processErrors(error)).show().delay(2000).fadeOut( "slow");
             });
     };
     myApp.logout = function(){
@@ -68,6 +73,7 @@ $(document).on("api:system:ready", function () {
             myApp.getSession();
             $("#logout-button").hide();
             tableContainer.hide();
+            currentUser.html("");
 
         });
 
@@ -87,7 +93,7 @@ $(document).on("api:system:ready", function () {
             tableContainer.show();
             createForm.hide();
         }, function(error){
-            errorDiv.html(dreamfactory.processErrors(error));
+            errorDiv.html(dreamfactory.processErrors(error).show().delay(2000).fadeOut( "slow"));
         });
     };
     myApp.deleteData = function(event, table_name){
@@ -107,11 +113,8 @@ $(document).on("api:system:ready", function () {
         }
         dreamfactory.db.updateRecord(request).then(function(response){
             //console.log("updated record " + response.id);
-            dataStatus.toggleClass("alert-success").html("Record Updated").delay(2000).fadeOut( "slow");
+            dataStatus.toggleClass("alert-success").html("Record Updated").show().delay(2000).fadeOut( "slow");
         });
-//      row.childNodes.forEach(function(cell){
-//          console.log(cell.innerHTML);
-//      });
     };
     myApp.showData = function(table_name){
         tableData.empty();
@@ -150,7 +153,7 @@ $(document).on("api:system:ready", function () {
 
             },
             function(error){
-                dataStatus.toggleClass("alert-danger").html(dreamfactory.processErrors(error)).delay(2000).fadeOut( "slow");
+                dataStatus.toggleClass("alert-danger").html(dreamfactory.processErrors(error)).show().delay(2000).fadeOut( "slow");
             }
         );
         myApp.createForm = function(schema){
@@ -171,12 +174,9 @@ $(document).on("api:system:ready", function () {
                 record[$( this).attr("id")] = $( this ).val();
             });
             dreamfactory.db.createRecords({"table_name":table_name, record: record , fields: "*"})
-                .then(function(response){
-                    var record = response.record[0].id;
-                    //console.log(record);
-                    //$("#" + record).css("background-color:red");
-                    myApp.showData(table_name, record);
-                    dataStatus.toggleClass("alert-success").html("Record Added").delay(2000).fadeOut( "slow");
+                .then(function(){
+                    myApp.showData(table_name);
+                    dataStatus.toggleClass("alert-success").html("Record Added").show().delay(2000).fadeOut( "slow");
                 });
         };
 

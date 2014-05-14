@@ -4,22 +4,36 @@
     <title></title>
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
     <meta name="viewport" content="width=device-width, user-scalable=no">
-    <link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
     <link href="style.css" rel="stylesheet">
-    <style>
-        body {
-            margin: 10px;
-        }
-
-    </style>
-
 </head>
 <body>
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-5">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">DreamFactory<sup>TM</sup></a>
+            <p class="navbar-text">Sample Auth & CRUD App</p>
 
-<div id="header" class="lead text-center">
-    The <b>DreamFactory<sup>TM</sup></b> JavaScript SDK Sample CRUD / Auth App
-</div>
-<button onclick ="myApp.logout()" id="logout-button" class = "btn btn-danger pull-right">Log out</button>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-5">
+            <div id="login-form" class="navbar-form navbar-left" role="search">
+                <div class="form-group">
+                    <input  class="form-control" id="email" type="email" placeholder="email">
+                    <input class="form-control" type="password" id = "password" placeholder="password">
+                </div>
+                <button class="btn btn-info" onclick="myApp.login()"><span class="glyphicon glyphicon-log-in"></span> Login</button>
+            </div>
+            <span style="display:inline-block" class="navbar-text navbar-right" id="current-user"></span><button onclick ="myApp.logout()" id="logout-button" class = "btn btn-default navbar-btn pull-right"><span class="glyphicon glyphicon-log-out"></span> Log out</button>
+        </div>
+    </div>
+</nav>
+
 <div id="error-div" class="alert-danger"></div>
 <div id="progress-bar" class="text-center"><h4 id="loading-message">Loading Dreamfactory APIs</h4>
     <div class="progress progress-striped active text-center">
@@ -29,25 +43,9 @@
         </div>
     </div>
 </div>
-<div id ="login-form">
-    <div >
-        <div class="login-container">
-            <div id="output"></div>
-            <div class="avatar"></div>
-            <div class="form-box">
-                <div>
-                    <input id="email" type="email" placeholder="email">
-                    <input type="password" id = "password" placeholder="password">
-                    <button class="btn btn-info btn-block login" onclick="myApp.login()">Login</button>
-                </div>
-            </div>
-        </div>
-
-    </div>
-</div>
 <br/>
 <div id="data-container">
-    <button onclick = "myApp.listLocalDatabases()" id="back-button" class = "btn"> <<< Back To Tables</button>
+    <button onclick = "myApp.listLocalDatabases()" id="back-button" class = "btn btn-info"><span class="glyphicon glyphicon-chevron-left"></span> Back To Tables</button>
     <span id="data-status"></span>
     <div id="table-container">
         <h4 id="data-message"></h4>
@@ -60,6 +58,7 @@
 
 </div>
 <script src='lib/jquery.js' type='text/javascript'></script>
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js" type="text/javascript"></script>
 <script src='lib/dreamfactory.js' type='text/javascript'></script>
 <script src='app.js' type='text/javascript'></script>
 </body>
