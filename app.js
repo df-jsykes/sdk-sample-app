@@ -53,7 +53,8 @@ $(document).on("api:system:ready", function () {
         var body ={email : $("#email").val(), password : $("#password").val()};
         dreamfactory.user.login(body)
             .then(function (response) {
-                window.dreamfactory.SESSION_TOKEN = response.session_id;
+                //window.dreamfactory.SESSION_TOKEN = response.session_id;
+                sessionStorage.setItem("SESSION_TOKEN", response.session_id);
                 $("#login-form").hide();
                 $("#logout-button").show();
                 $("#password").val("");
@@ -74,6 +75,7 @@ $(document).on("api:system:ready", function () {
             $("#logout-button").hide();
             tableContainer.hide();
             currentUser.html("");
+            sessionStorage.removeItem("SESSION_TOKEN");
 
         });
 
@@ -109,11 +111,9 @@ $(document).on("api:system:ready", function () {
         var request = {table_name : table_name , id : id, record: {}};
         for (var i = 0; i < row.childNodes.length - 1; i++) {
             request.record[row.childNodes[i].className] = row.childNodes[i].textContent;
-            //console.log(row.childNodes[i].className + "," +  row.childNodes[i].textContent);
         }
         dreamfactory.db.updateRecord(request).then(function(response){
-            //console.log("updated record " + response.id);
-            dataStatus.toggleClass("alert-success").html("Record Updated").show().delay(2000).fadeOut( "slow");
+            dataStatus.addClass("alert-success").html("Record Updated").show().delay(2000).fadeOut( "slow");
         });
     };
     myApp.showData = function(table_name){
@@ -153,7 +153,7 @@ $(document).on("api:system:ready", function () {
 
             },
             function(error){
-                dataStatus.toggleClass("alert-danger").html(dreamfactory.processErrors(error)).show().delay(2000).fadeOut( "slow");
+                dataStatus.addClass("alert-danger").html(dreamfactory.processErrors(error)).show().delay(2000).fadeOut( "slow");
             }
         );
         myApp.createForm = function(schema){
@@ -176,7 +176,8 @@ $(document).on("api:system:ready", function () {
             dreamfactory.db.createRecords({"table_name":table_name, record: record , fields: "*"})
                 .then(function(){
                     myApp.showData(table_name);
-                    dataStatus.toggleClass("alert-success").html("Record Added").show().delay(2000).fadeOut( "slow");
+
+                    dataStatus.addClass("alert-success").html("Record Added").show().delay(2000).fadeOut( "slow");
                 });
         };
 
