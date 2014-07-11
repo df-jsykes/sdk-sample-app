@@ -32,3 +32,6 @@ body{
 #error-div{
     display:none;
 }
+#form-container .form-control{
+    margin:3px;
+}
