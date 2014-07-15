@@ -132,6 +132,10 @@ $(document).on("api:system:ready", function () {
     };
     myApp.saveData = function (event, table_name) {
         var row = event.target.parentNode.parentNode;
+
+        if(!row.id){
+            row = row.parentNode;
+        }
         var id = row.id;
 
         var request = {table_name: table_name, id: id};
