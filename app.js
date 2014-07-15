@@ -122,6 +122,10 @@ $(document).on("api:system:ready", function () {
     };
     myApp.deleteData = function (event, table_name) {
         var row = event.target.parentNode.parentNode;
+
+        if(!row.id){
+            row = row.parentNode;
+        }
         var id = row.id;
         dreamfactory.db.deleteRecord({table_name: table_name, id: id}).then(function (response) {
             $("#" + response.id).fadeOut();
