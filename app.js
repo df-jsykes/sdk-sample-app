@@ -45,6 +45,7 @@ $(document).on("api:system:ready", function () {
                 currentUser.html("Signed in as <b>" + user + "</b>");
             }else{
                 currentUser.html("Signed in as <b>Guest</b>");
+                $("#login-form").show();
             }
 
         }, function (error) {
