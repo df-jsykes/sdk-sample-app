@@ -35,3 +35,15 @@ body{
 #form-container .form-control{
     margin:3px;
 }
+#console-container{
+  position:absolute;
+  bottom:0px;
+  right:0px;
+  left:0px;
+
+
+}
+#console{
+  height:70px;
+  overflow:auto;
+}

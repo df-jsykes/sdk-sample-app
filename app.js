@@ -43,6 +43,7 @@ $(document).on("api:system:ready", function () {
                 sessionStorage.setItem("SESSION_TOKEN", response.session_id);
                 var user = response.display_name || response.first_name + " " + response.last_name;
                 currentUser.html("Signed in as <b>" + user + "</b>");
+                $("#logout-button").show();
             }else{
                 currentUser.html("Signed in as <b>Guest</b>");
                 $("#login-form").show();
@@ -85,6 +86,7 @@ $(document).on("api:system:ready", function () {
                 myApp.listLocalDatabases();
                 var user = response.display_name || response.first_name + " " + response.last_name;
                 currentUser.html("Signed in as <b>" + user + "</b>");
+                myApp.logEvent("dreamfactory.user.login");
 
             }, function (error) {
                 //console.log(error);
@@ -99,10 +101,16 @@ $(document).on("api:system:ready", function () {
             tableContainer.hide();
             currentUser.html("");
             sessionStorage.removeItem("SESSION_TOKEN");
-
+            myApp.logEvent("dreamfactory.user.logout");
         });
 
     };
+    myApp.logEvent = function(name, requestObj, path, responseObj){
+      $("#console").append("<h6>SDK Call : " + name + "</h6>");
+    }
+    myApp.clearLog = function(){
+      $("#console").html("");
+    }
     myApp.listLocalDatabases = function () {
         errorDiv.html("");
         backButton.hide();
@@ -225,4 +233,3 @@ $(document).on("api:system:ready", function () {
     progressBar.hide();
     myApp.getConfig();
 });
-
