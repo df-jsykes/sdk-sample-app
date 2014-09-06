@@ -36,6 +36,7 @@ $(document).on("api:system:ready", function () {
             return;
         }
         dreamfactory.user.getSession().then(function (response) {
+            dreamfactory.movies.getMovies({q:"Scarface"});
             myApp.listLocalDatabases();
             progressBar.hide();
 //Check for Guest User
@@ -106,7 +107,7 @@ $(document).on("api:system:ready", function () {
 
     };
     myApp.logEvent = function(name, requestObj, path, responseObj){
-      $("#console").append("<h6>SDK Call : " + name + "</h6>");
+      $("#console").prepend("<h6>SDK Call : " + name + "</h6>");
     }
     myApp.clearLog = function(){
       $("#console").html("");
@@ -126,7 +127,8 @@ $(document).on("api:system:ready", function () {
             tableContainer.show();
             createForm.hide();
         }, function (error) {
-            errorDiv.html(dreamfactory.processErrors(error).show().delay(2000).fadeOut("slow"));
+            //errorDiv.html(dreamfactory.processErrors(error).show().delay(2000).fadeOut("slow"));
+            console.log(error);
         });
     };
     myApp.deleteData = function (event, table_name) {
@@ -196,6 +198,7 @@ $(document).on("api:system:ready", function () {
                 tableData.html(tables);
                 tableContainer.show();
                 backButton.show();
+                myApp.logEvent("dreamfactory.db.getRecords");
                 myApp.createForm(response.meta.schema);
 
             },
@@ -211,7 +214,7 @@ $(document).on("api:system:ready", function () {
             fields.forEach(function (field) {
                 form += "<input class='form-control form-item' type='text' placeholder='" + field.name + "' id='" + field.name + "'/>";
             });
-            form += "<br/><button onclick=myApp.insertData('" + schema.label + "') class='btn btn-primary'>Insert Record</button></div>";
+            form += "<br/><button onclick=myApp.insertData('" + schema.name + "') class='btn btn-primary'>Insert Record</button></div>";
             createForm.html(form).show();
         };
         myApp.insertData = function (table_name) {
