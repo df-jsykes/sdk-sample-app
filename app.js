@@ -36,7 +36,7 @@ $(document).on("api:system:ready", function () {
             return;
         }
         dreamfactory.user.getSession().then(function (response) {
-            dreamfactory.movies.getMovies({q:"Scarface"});
+            //dreamfactory.movies.getMovies({q:"Scarface"});
             myApp.listLocalDatabases();
             progressBar.hide();
 //Check for Guest User
@@ -74,7 +74,7 @@ $(document).on("api:system:ready", function () {
         errorDiv.html("");
         loadingMessage.html("Logging In");
         progressBar.show();
-        var body = {email: $("#email").val(), password: $("#password").val()};
+        var body = {email: $("#email").val(), password: $("#password").val(), duration : 3000};
         dreamfactory.user.login(body)
             .then(function (response) {
                 //window.dreamfactory.SESSION_TOKEN = response.session_id;
@@ -107,10 +107,10 @@ $(document).on("api:system:ready", function () {
 
     };
     myApp.logEvent = function(name, requestObj, path, responseObj){
-      $("#console").prepend("<h6>SDK Call : " + name + "</h6>");
+        $("#console").prepend("<h6>SDK Call : " + name + "</h6>");
     }
     myApp.clearLog = function(){
-      $("#console").html("");
+        $("#console").html("");
     }
     myApp.listLocalDatabases = function () {
         errorDiv.html("");
@@ -139,8 +139,8 @@ $(document).on("api:system:ready", function () {
         }
         var id = row.id;
         dreamfactory.db.deleteRecord({table_name: table_name, id: id}).then(function (response) {
-            $("#" + response.id).fadeOut();
-        },
+                $("#" + response.id).fadeOut();
+            },
             function (error) {
                 dataStatus.addClass("alert-danger").html(dreamfactory.processErrors(error)).show().delay(2000).fadeOut("slow");
             });
@@ -158,8 +158,8 @@ $(document).on("api:system:ready", function () {
             request[row.childNodes[i].className] = row.childNodes[i].textContent;
         }
         dreamfactory.db.updateRecord(request).then(function (response) {
-            dataStatus.addClass("alert-success").html("Record Updated").show().delay(2000).fadeOut("slow");
-        },
+                dataStatus.addClass("alert-success").html("Record Updated").show().delay(2000).fadeOut("slow");
+            },
             function (error) {
                 dataStatus.addClass("alert-danger").html(dreamfactory.processErrors(error)).show().delay(2000).fadeOut("slow");
             });
